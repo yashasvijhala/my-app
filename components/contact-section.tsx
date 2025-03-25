@@ -114,7 +114,7 @@ export default function ContactSection() {
                   </div>
                   <h3 className="text-xl font-light mb-2">Message Sent!</h3>
                   <p className="text-gray-600">
-                    We &apos;'ll get back to you as soon as possible.
+                    We&#39;ll get back to you as soon as possible.
                   </p>
                 </motion.div>
               ) : (
