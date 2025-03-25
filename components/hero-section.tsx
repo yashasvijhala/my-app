@@ -1,8 +1,15 @@
-'use client'
-
 import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
+
+class Metaball extends THREE.Mesh {
+  velocity: THREE.Vector3
+
+  constructor(geometry: THREE.BufferGeometry, material: THREE.Material) {
+    super(geometry, material)
+    this.velocity = new THREE.Vector3(0, 0, 0)
+  }
+}
 
 const HeroSection = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -36,7 +43,7 @@ const HeroSection = () => {
     })
     renderer.setSize(window.innerWidth, window.innerHeight)
 
-    const metaballs: THREE.Mesh[] = []
+    const metaballs: Metaball[] = []
     const metaballGeometry = new THREE.SphereGeometry(1.2, 32, 32)
     const colors = [0x00a8e8, 0x00b4b4, 0x00c896, 0x00d078]
 
@@ -48,7 +55,7 @@ const HeroSection = () => {
         roughness: 0.1,
         metalness: 0.5
       })
-      const ball = new THREE.Mesh(metaballGeometry, material)
+      const ball = new Metaball(metaballGeometry, material)
       ball.position.set(x, y, z)
       ball.velocity = new THREE.Vector3(
         (Math.random() - 0.5) * 0.05,
