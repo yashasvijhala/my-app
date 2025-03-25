@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 
+// Extend THREE.Mesh with a custom class that includes a velocity property
 class Metaball extends THREE.Mesh {
   velocity: THREE.Vector3
 
@@ -44,7 +45,7 @@ const HeroSection = () => {
     renderer.setSize(window.innerWidth, window.innerHeight)
 
     const metaballs: Metaball[] = []
-    const metaballGeometry = new THREE.SphereGeometry(1.2, 32, 32)
+    const metaballGeometry = new THREE.SphereGeometry(1.2, 32, 32) // Use SphereGeometry instead of SphereBufferGeometry
     const colors = [0x00a8e8, 0x00b4b4, 0x00c896, 0x00d078]
 
     const createMetaball = (x: number, y: number, z: number, color: number) => {
