@@ -100,7 +100,7 @@ export function ApplicationForm({ jobTitle, onClose }: ApplicationFormProps) {
           </div>
           <h3 className="text-xl font-light mb-2">Application Submitted!</h3>
           <p className="text-gray-600">
-            Thank you for your interest. We&apos;'ll review your application and
+            Thank you for your interest. We&#39;ll review your application and
             get back to you soon.
           </p>
         </motion.div>
