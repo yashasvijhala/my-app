@@ -9,6 +9,12 @@ import {
 } from '@/db/queries/inquires'
 import { z } from 'zod'
 
+const InquirySchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email format'),
+  message: z.string().min(5, 'Message must be at least 5 characters')
+})
+console.log('inq', InquirySchema)
 export async function createInquiryAction(data: z.infer<typeof InquirySchema>) {
   let userId
   const userData = await getUserByEmail(data?.email)
