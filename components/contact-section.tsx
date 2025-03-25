@@ -66,7 +66,7 @@ export default function ContactSection() {
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Have questions or ready to start your next project? Contact us today
-            and let &apos;'s discuss how we can help your business grow.
+            and let &#39;s discuss how we can help your business grow.
           </p>
         </motion.div>
 
