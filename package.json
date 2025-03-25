@@ -13,6 +13,7 @@
     "@react-three/fiber": "^9.1.0",
     "@react-three/postprocessing": "^3.0.4",
     "@react-three/rapier": "^2.0.0",
+    "@types/three": "^0.174.0",
     "OrbitControls": "link:three/examples/jsm/controls/OrbitControls",
     "SimplexNoise": "link:three/examples/jsm/math/SimplexNoise",
     "dotenv": "^16.4.7",
