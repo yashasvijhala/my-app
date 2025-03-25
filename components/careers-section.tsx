@@ -18,8 +18,8 @@ export default function CareersSection() {
             Join Our <span className="text-blue-600 font-normal">Team</span>
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            We&apos;'re looking for talented individuals to help us grow.
-            Explore our current openings and find your next career opportunity.
+            We&apos;re looking for talented individuals to help us grow. Explore
+            our current openings and find your next career opportunity.
           </p>
         </motion.div>
 
