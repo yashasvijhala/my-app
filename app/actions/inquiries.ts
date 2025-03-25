@@ -9,23 +9,17 @@ import {
 } from '@/db/queries/inquires'
 import { z } from 'zod'
 
-const InquirySchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email format'),
-  message: z.string().min(5, 'Message must be at least 5 characters')
-})
-
 export async function createInquiryAction(data: z.infer<typeof InquirySchema>) {
-  let userId 
+  let userId
   const userData = await getUserByEmail(data?.email)
   if (userData) {
     userId = userData?.id
+  } else {
+    userId = await createUser({
+      email: data?.email,
+      name: data?.name
+    })
   }
-  else{
-  userId = await createUser({
-    email: data?.email,
-    name: data?.name
-  })}
   if (!userId) throw new Error('Insuffecient information!')
   const res = await createInquiry({
     message: data?.message,
