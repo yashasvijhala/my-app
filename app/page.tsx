@@ -1,9 +1,9 @@
-import Layout from "../components/layout"
-import HeroSection from "../components/hero-section"
-import ServicesSection from "../components/services-section"
-import AboutSection from "../components/about-section"
-import ContactSection from "../components/contact-section"
-import Footer from "../components/footer"
+import CareersSection from '@/components/careers-section'
+import AboutSection from '../components/about-section'
+import ContactSection from '../components/contact-section'
+import HeroSection from '../components/hero-section'
+import Layout from '../components/layout'
+import ServicesSection from '../components/services-section'
 
 export default function Home() {
   return (
@@ -11,9 +11,8 @@ export default function Home() {
       <HeroSection />
       <ServicesSection />
       <AboutSection />
+      <CareersSection />
       <ContactSection />
-      <Footer />
     </Layout>
   )
 }
-

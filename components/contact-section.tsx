@@ -1,7 +1,5 @@
 'use client'
 
-import { Environment, Float, OrbitControls } from '@react-three/drei'
-import { Canvas } from '@react-three/fiber'
 import { motion } from 'framer-motion'
 import type React from 'react'
 import { useState } from 'react'
@@ -54,7 +52,7 @@ export default function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-20 bg-gray-50">
+    <section id="contact" className="py-20 bg-white">
       <div className="container mx-auto px-6">
         <motion.div
           className="text-center mb-16"
@@ -80,20 +78,7 @@ export default function ContactSection() {
             transition={{ duration: 0.8 }}
           >
             <div className="h-[400px]">
-              <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
-                <ambientLight intensity={0.5} />
-                <pointLight position={[10, 10, 10]} intensity={1} />
-                <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.2}>
-                  <ContactModel />
-                </Float>
-                <OrbitControls
-                  enableZoom={false}
-                  enablePan={false}
-                  autoRotate
-                  autoRotateSpeed={0.5}
-                />
-                <Environment preset="city" />
-              </Canvas>
+              <ContactModel />
             </div>
           </motion.div>
 

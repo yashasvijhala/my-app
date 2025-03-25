@@ -1,173 +1,156 @@
 'use client'
 
-import {
-  Environment,
-  OrbitControls,
-  PerspectiveCamera
-} from '@react-three/drei'
-import { Canvas } from '@react-three/fiber'
 import { motion } from 'framer-motion'
-import { PhoneCallIcon } from 'lucide-react'
-import { Suspense, useEffect, useRef, useState } from 'react'
-import { HeroModel } from './hero-model'
+import { useEffect, useRef, useState } from 'react'
+import * as THREE from 'three'
 
-export default function HeroSection() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  // Parallax effect for hero content
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+const HeroSection = () => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const [text, setText] = useState('')
+  const fullText = 'SK5 Business Solutions'
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 2,
-        y: (e.clientY / window.innerHeight - 0.5) * 2
+    let index = 0
+    const interval = setInterval(() => {
+      setText(fullText.slice(0, index))
+      index++
+      if (index > fullText.length) clearInterval(interval)
+    }, 150)
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    )
+    camera.position.z = 10
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvasRef.current!,
+      alpha: true,
+      antialias: true
+    })
+    renderer.setSize(window.innerWidth, window.innerHeight)
+
+    const metaballs: THREE.Mesh[] = []
+    const metaballGeometry = new THREE.SphereGeometry(1.2, 32, 32)
+    const colors = [0x00a8e8, 0x00b4b4, 0x00c896, 0x00d078]
+
+    const createMetaball = (x: number, y: number, z: number, color: number) => {
+      const material = new THREE.MeshStandardMaterial({
+        color: color,
+        transparent: true,
+        opacity: 0.6,
+        roughness: 0.1,
+        metalness: 0.5
+      })
+      const ball = new THREE.Mesh(metaballGeometry, material)
+      ball.position.set(x, y, z)
+      ball.velocity = new THREE.Vector3(
+        (Math.random() - 0.5) * 0.05,
+        (Math.random() - 0.5) * 0.05,
+        0
+      )
+      scene.add(ball)
+      return ball
+    }
+
+    for (let i = 0; i < 6; i++) {
+      const x = (Math.random() - 0.5) * 20
+      const y = (Math.random() - 0.5) * 10
+      metaballs.push(createMetaball(x, y, -10, colors[i % colors.length]))
+    }
+
+    const light = new THREE.AmbientLight(0xffffff, 0.5)
+    scene.add(light)
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
+    directionalLight.position.set(3, 3, 5)
+    scene.add(directionalLight)
+
+    const animate = () => {
+      requestAnimationFrame(animate)
+
+      metaballs.forEach(ball => {
+        ball.position.x += ball.velocity.x
+        ball.position.y += ball.velocity.y
+
+        if (Math.abs(ball.position.x) > 10) ball.velocity.x *= -1
+        if (Math.abs(ball.position.y) > 5) ball.velocity.y *= -1
+      })
+
+      renderer.render(scene, camera)
+    }
+
+    animate()
+
+    // Mouse interaction logic
+    const handleMouseMove = (event: MouseEvent) => {
+      const { clientX, clientY } = event
+      const mouseX = (clientX / window.innerWidth) * 2 - 1
+      const mouseY = -(clientY / window.innerHeight) * 2 + 1
+
+      metaballs.forEach(ball => {
+        const dx = ball.position.x - mouseX * 10
+        const dy = ball.position.y - mouseY * 5
+        const distance = Math.sqrt(dx * dx + dy * dy)
+
+        if (distance < 2) {
+          ball.velocity.x += dx * 0.002
+          ball.velocity.y += dy * 0.002
+        }
       })
     }
 
     window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight
+      camera.updateProjectionMatrix()
+      renderer.setSize(window.innerWidth, window.innerHeight)
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('mousemove', handleMouseMove)
+    }
   }, [])
 
   return (
-    <section
-      id="home"
-      className="relative min-h-screen flex items-center pt-20 overflow-hidden"
-    >
-      <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="z-10"
-        >
-          <motion.h1
-            className="text-5xl md:text-6xl lg:text-7xl font-extralight leading-tight mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            SK5 <span className="text-blue-600 font-normal">Business</span>{' '}
-            Solutions
-          </motion.h1>
+    <div className="relative w-full h-screen overflow-hidden flex items-center justify-center">
+      <canvas
+        ref={canvasRef}
+        className="absolute top-0 left-0 z-0 w-full h-full"
+      />
 
-          <motion.p
-            className="text-lg text-gray-600 mb-8 max-w-lg"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            We help businesses transform and grow with cutting-edge technology
-            and strategic insights.
-          </motion.p>
-
-          <motion.div
-            className="flex flex-col sm:flex-row gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            <motion.button
-              className="px-8 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Explore Services
-            </motion.button>
-
-            <motion.button
-              className="px-8 py-3 border border-gray-300 rounded-full hover:border-blue-600 hover:text-blue-600 transition-colors flex items-center justify-center gap-2"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span>Contact Us</span>
-              <PhoneCallIcon />
-            </motion.button>
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="h-[400px] md:h-[600px] w-full"
-          style={{
-            transform: `translate(${mousePosition.x * 20}px, ${
-              mousePosition.y * 20
-            }px)`
-          }}
-        >
-          <Canvas
-            ref={canvasRef}
-            shadows
-            gl={{ antialias: true }}
-            dpr={[1, 2]}
-            camera={{ position: [0, 0, 12], fov: 45 }}
-          >
-            <Suspense fallback={null}>
-              <color attach="background" args={['#ffffff']} />
-              <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={45} />
-              <ambientLight intensity={0.5} />
-              <spotLight
-                position={[10, 10, 10]}
-                angle={0.15}
-                penumbra={1}
-                intensity={1}
-                castShadow
-                shadow-mapSize={[2048, 2048]}
-              />
-              <directionalLight
-                position={[-10, 10, 5]}
-                intensity={0.5}
-                castShadow
-                shadow-mapSize={[1024, 1024]}
-              />
-              <HeroModel />
-              <OrbitControls
-                enableZoom={false}
-                enablePan={false}
-                autoRotate
-                autoRotateSpeed={0.5}
-                minPolarAngle={Math.PI / 6}
-                maxPolarAngle={Math.PI / 2}
-              />
-              <Environment preset="city" />
-            </Suspense>
-          </Canvas>
-        </motion.div>
-      </div>
-
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
+      <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center z-10 pointer-events-none text-center">
+        <motion.h1
+          className="text-5xl md:text-6xl lg:text-8xl font-extralight leading-tight mb-6"
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 1,
-            delay: 1.5,
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: 'reverse'
-          }}
+          transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-blue-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1}
-              d="M19 14l-7 7m0 0l-7-7m7 7V3"
-            />
-          </svg>
-        </motion.div>
-        <span className="text-xs text-gray-500 mt-2">Scroll to explore</span>
-      </div>
+          {text}
+        </motion.h1>
 
-      {/* Premium gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-blue-500/5 pointer-events-none" />
-    </section>
+        <motion.p
+          className="text-lg text-gray-600 mb-8 max-w-lg"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          We help businesses transform and grow with cutting-edge technology and
+          strategic insights.
+        </motion.p>
+      </div>
+    </div>
   )
 }
+
+export default HeroSection

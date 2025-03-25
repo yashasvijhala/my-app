@@ -4,8 +4,6 @@ import type React from 'react'
 
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import Footer from './footer'
-import Navbar from './navbar'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
@@ -51,9 +49,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <Navbar />
             <main>{children}</main>
-            <Footer />
           </motion.div>
         )}
       </AnimatePresence>

@@ -44,10 +44,11 @@ export default function Navbar() {
   }, [])
 
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'Services', href: '#services' },
-    { name: 'About Us', href: '#about' },
-    { name: 'Contact', href: '#contact' }
+    { name: 'Home', href: '/#home' },
+    { name: 'Services', href: '/#services' },
+    { name: 'About Us', href: '/#about' },
+    { name: 'Contact', href: '/#contact' },
+    { name: 'Careers', href: '/careers' }
   ]
 
   const mobileMenuVariants = {

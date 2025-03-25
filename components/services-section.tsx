@@ -1,12 +1,10 @@
 'use client'
 
-import { Center, Float, OrbitControls } from '@react-three/drei'
-import { Canvas } from '@react-three/fiber'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { ServiceCard } from './service-card'
 
-const services = [
+export const services = [
   {
     id: 1,
     title: 'Business Process Outsourcing (BPO)',
@@ -71,7 +69,7 @@ export default function ServicesSection() {
           transition={{ duration: 0.8 }}
         >
           <h2 className="text-3xl md:text-4xl font-extralight mb-4">
-            Our <span className="text-blue-600 font-normal">Solutions</span>
+            Our <span className="text-blue-600 font-normal">Servicess</span>
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             We provide comprehensive business solutions to help you achieve your
@@ -100,30 +98,6 @@ export default function ServicesSection() {
             </motion.div>
           ))}
         </div>
-
-        <motion.div
-          className="mt-20 h-[300px] md:h-[400px]"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-        >
-          <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} intensity={1} />
-            <Float speed={2} rotationIntensity={0.2} floatIntensity={0.2}>
-              <Center>
-                {/* 3D text component is commented out in the original */}
-              </Center>
-            </Float>
-            <OrbitControls
-              enableZoom={false}
-              enablePan={false}
-              autoRotate
-              autoRotateSpeed={2}
-            />
-          </Canvas>
-        </motion.div>
       </div>
     </section>
   )
