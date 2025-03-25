@@ -1,8 +1,6 @@
-"use client"
-
-import { useRef } from "react"
-import { useFrame } from "@react-three/fiber"
-import type * as THREE from "three"
+import { useFrame } from '@react-three/fiber'
+import { useRef } from 'react'
+import type * as THREE from 'three'
 
 export function AboutModel() {
   const groupRef = useRef<THREE.Group>(null)
@@ -18,22 +16,45 @@ export function AboutModel() {
       {/* Abstract geometric shapes representing business growth */}
       <mesh position={[0, 0, 0]}>
         <octahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial color="#3b82f6" metalness={0.8} roughness={0.2} wireframe />
+        <meshStandardMaterial
+          color="#3b82f6"
+          metalness={0.8}
+          roughness={0.2}
+          wireframe
+        />
       </mesh>
 
       <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI / 4]}>
         <octahedronGeometry args={[1.2, 0]} />
-        <meshStandardMaterial color="#60a5fa" metalness={0.6} roughness={0.4} wireframe opacity={0.5} transparent />
+        <meshStandardMaterial
+          color="#60a5fa"
+          metalness={0.6}
+          roughness={0.4}
+          wireframe
+          opacity={0.5}
+          transparent
+        />
       </mesh>
 
       <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
         <octahedronGeometry args={[1.4, 0]} />
-        <meshStandardMaterial color="#93c5fd" metalness={0.4} roughness={0.6} wireframe opacity={0.3} transparent />
+        <meshStandardMaterial
+          color="#93c5fd"
+          metalness={0.4}
+          roughness={0.6}
+          wireframe
+          opacity={0.3}
+          transparent
+        />
       </mesh>
 
       {/* Floating cubes representing data points */}
       {Array.from({ length: 10 }).map((_, i) => {
-        const position = [(Math.random() - 0.5) * 5, (Math.random() - 0.5) * 5, (Math.random() - 0.5) * 5]
+        const position: [number, number, number] = [
+          (Math.random() - 0.5) * 5,
+          (Math.random() - 0.5) * 5,
+          (Math.random() - 0.5) * 5
+        ]
         const size = Math.random() * 0.3 + 0.1
         const speed = Math.random() * 0.5 + 0.5
         const rotationSpeed = Math.random() * 0.02 + 0.01
@@ -58,7 +79,7 @@ function FloatingCube({
   size,
   speed,
   rotationSpeed,
-  color,
+  color
 }: {
   position: [number, number, number]
   size: number
@@ -72,7 +93,8 @@ function FloatingCube({
   useFrame(({ clock }) => {
     if (ref.current) {
       // Floating motion
-      ref.current.position.y = initialY + Math.sin(clock.getElapsedTime() * speed) * 0.5
+      ref.current.position.y =
+        initialY + Math.sin(clock.getElapsedTime() * speed) * 0.5
 
       // Rotation
       ref.current.rotation.x += rotationSpeed
@@ -87,4 +109,3 @@ function FloatingCube({
     </mesh>
   )
 }
-
