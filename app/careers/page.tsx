@@ -121,9 +121,9 @@ export default function CareersPage() {
             </h2>
 
             <p className="text-gray-600 mb-6">
-              We're looking for talented individuals who are passionate about
-              innovation and excellence. Join us in our mission to transform
-              businesses through cutting-edge solutions.
+              We&apos;re looking for talented individuals who are passionate
+              about innovation and excellence. Join us in our mission to
+              transform businesses through cutting-edge solutions.
             </p>
 
             <p className="text-gray-600 mb-8">
