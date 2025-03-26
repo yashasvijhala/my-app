@@ -8,11 +8,13 @@ import ServicesSection from '../components/services-section'
 export default function Home() {
   return (
     <Layout>
-      <HeroSection />
-      <ServicesSection />
-      <AboutSection />
-      <CareersSection />
-      <ContactSection />
+      <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <HeroSection />
+        <ServicesSection />
+        <AboutSection />
+        <CareersSection />
+        <ContactSection />
+      </div>
     </Layout>
   )
 }

@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <div className="min-h-screen bg-white text-gray-800 font-light">
+    <div className="min-h-screen bg-white text-gray-800 font-light overflow-x-hidden">
       <AnimatePresence>
         {isLoading ? (
           <motion.div
@@ -52,7 +52,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             transition={{ duration: 0.5 }}
           >
             <Navbar />
-            <main>{children}</main>
+            <main className="w-full">{children}</main>
             <Footer />
           </motion.div>
         )}

@@ -15,7 +15,7 @@ export default function Navbar() {
       setScrolled(scrollPosition > 50)
 
       // Update active section based on scroll position
-      const sections = ['home', 'services', 'about', 'contact']
+      const sections = ['home', 'services', 'about', 'contact', 'careers']
 
       for (const section of sections) {
         const element = document.getElementById(section)

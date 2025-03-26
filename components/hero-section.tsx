@@ -1,156 +1,118 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
-import * as THREE from 'three'
+import { useEffect, useState } from 'react'
+import ThreeCanvas from './three-canvas'
 
-const HeroSection = () => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const [text, setText] = useState('')
-  const fullText = 'SK5 Business Solutions'
+export default function HeroSection() {
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    let index = 0
-    const interval = setInterval(() => {
-      setText(fullText.slice(0, index))
-      index++
-      if (index > fullText.length) clearInterval(interval)
-    }, 150)
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    )
-    camera.position.z = 10
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas: canvasRef.current!,
-      alpha: true,
-      antialias: true
-    })
-    renderer.setSize(window.innerWidth, window.innerHeight)
-
-    const metaballs: THREE.Mesh[] = []
-    const metaballGeometry = new THREE.SphereGeometry(1.2, 32, 32)
-    const colors = [0x00a8e8, 0x00b4b4, 0x00c896, 0x00d078]
-
-    const createMetaball = (x: number, y: number, z: number, color: number) => {
-      const material = new THREE.MeshStandardMaterial({
-        color: color,
-        transparent: true,
-        opacity: 0.6,
-        roughness: 0.1,
-        metalness: 0.5
-      })
-      const ball = new THREE.Mesh(metaballGeometry, material)
-      ball.position.set(x, y, z)
-      ball.velocity = new THREE.Vector3(
-        (Math.random() - 0.5) * 0.05,
-        (Math.random() - 0.5) * 0.05,
-        0
-      )
-      scene.add(ball)
-      return ball
-    }
-
-    for (let i = 0; i < 6; i++) {
-      const x = (Math.random() - 0.5) * 20
-      const y = (Math.random() - 0.5) * 10
-      metaballs.push(createMetaball(x, y, -10, colors[i % colors.length]))
-    }
-
-    const light = new THREE.AmbientLight(0xffffff, 0.5)
-    scene.add(light)
-
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
-    directionalLight.position.set(3, 3, 5)
-    scene.add(directionalLight)
-
-    const animate = () => {
-      requestAnimationFrame(animate)
-
-      metaballs.forEach(ball => {
-        ball.position.x += ball.velocity.x
-        ball.position.y += ball.velocity.y
-
-        if (Math.abs(ball.position.x) > 10) ball.velocity.x *= -1
-        if (Math.abs(ball.position.y) > 5) ball.velocity.y *= -1
-      })
-
-      renderer.render(scene, camera)
-    }
-
-    animate()
-
-    // Mouse interaction logic
-    const handleMouseMove = (event: MouseEvent) => {
-      const { clientX, clientY } = event
-      const mouseX = (clientX / window.innerWidth) * 2 - 1
-      const mouseY = -(clientY / window.innerHeight) * 2 + 1
-
-      metaballs.forEach(ball => {
-        const dx = ball.position.x - mouseX * 10
-        const dy = ball.position.y - mouseY * 5
-        const distance = Math.sqrt(dx * dx + dy * dy)
-
-        if (distance < 2) {
-          ball.velocity.x += dx * 0.002
-          ball.velocity.y += dy * 0.002
-        }
-      })
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-
-    const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight
-      camera.updateProjectionMatrix()
-      renderer.setSize(window.innerWidth, window.innerHeight)
-    }
-
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      window.removeEventListener('mousemove', handleMouseMove)
-    }
+    const timer = setTimeout(() => setIsLoaded(true), 500)
+    return () => clearTimeout(timer)
   }, [])
 
   return (
-    <div className="relative w-full h-screen overflow-hidden flex items-center justify-center">
-      <canvas
-        ref={canvasRef}
-        className="absolute top-0 left-0 z-0 w-full h-full"
-      />
+    <div className="relative w-full h-screen overflow-hidden bg-white">
+      <div className="absolute inset-0 z-0">
+        <ThreeCanvas />
+      </div>
 
-      <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center z-10 pointer-events-none text-center">
-        <motion.h1
-          className="text-5xl md:text-6xl lg:text-8xl font-extralight leading-tight mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center w-full h-full px-4">
+        <div
+          className={`text-center max-w-4xl w-full px-4 transition-all duration-1000 transform ${
+            isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
         >
-          {text}
-        </motion.h1>
+          <p className="text-sm font-medium tracking-wider text-gray-500 uppercase mb-4">
+            Welcome to the future
+          </p>
+          <motion.h1
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extralight leading-tight mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            SK5 <span className="text-blue-600 font-normal">Business</span>{' '}
+            Solutions
+          </motion.h1>
+          <motion.p
+            className="text-base sm:text-lg text-gray-600 mb-8 mx-auto max-w-2xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            We help businesses transform and grow with cutting-edge technology
+            and strategic insights. Blend creativity with technology for an
+            unforgettable user experience.
+          </motion.p>
+          <motion.div
+            className="flex flex-col sm:flex-row justify-center gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+          >
+            <motion.button
+              className="px-8 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Explore Solutions
+            </motion.button>
 
-        <motion.p
-          className="text-lg text-gray-600 mb-8 max-w-lg"
-          initial={{ opacity: 0, y: 20 }}
+            <motion.button
+              className="px-8 py-3 border border-gray-300 rounded-full hover:border-blue-600 hover:text-blue-600 transition-colors flex items-center justify-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span>Watch Demo</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </motion.button>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{
+            duration: 1,
+            delay: 1.5,
+            repeat: Number.POSITIVE_INFINITY,
+            repeatType: 'reverse'
+          }}
         >
-          We help businesses transform and grow with cutting-edge technology and
-          strategic insights.
-        </motion.p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 text-blue-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
+        </motion.div>
+        <span className="text-xs text-gray-500 mt-2">Scroll to explore</span>
       </div>
     </div>
   )
 }
-
-export default HeroSection
