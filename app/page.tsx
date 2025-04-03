@@ -1,4 +1,5 @@
 import CareersSection from '@/components/careers-section'
+import StepsAnimation from '@/components/steps-animation'
 import AboutSection from '../components/about-section'
 import ContactSection from '../components/contact-section'
 import HeroSection from '../components/hero-section'
@@ -8,13 +9,12 @@ import ServicesSection from '../components/services-section'
 export default function Home() {
   return (
     <Layout>
-      <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-        <HeroSection />
-        <ServicesSection />
-        <AboutSection />
-        <CareersSection />
-        <ContactSection />
-      </div>
+      <HeroSection />
+      <StepsAnimation />
+      <ServicesSection />
+      <AboutSection />
+      <CareersSection />
+      <ContactSection />
     </Layout>
   )
 }
